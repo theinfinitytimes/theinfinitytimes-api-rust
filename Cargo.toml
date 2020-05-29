@@ -1,0 +1,21 @@
+[package]
+name = "theinfinitytimes-api-rs"
+version = "0.1.0"
+authors = ["theinfinitytimes Group"]
+edition = "2018"
+description = "This is the api server for the infinitytimes frontend"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+juniper = "0.14.2"
+juniper_warp = "0.5.2"
+warp = "0.2.3"
+tokio = "0.2.21"
+bson = "0.14.1"
+mongodb = "0.10.0"
+wither = "0.8.0"
+
+[build-dependencies]
+bench = "^1.0.0"
+serde_json = "1.0.53"
