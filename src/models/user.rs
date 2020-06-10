@@ -14,17 +14,17 @@ use theinfinitytimes_lib::*;
 /// some front-end functionality based.
 #[derive(Model, Serialize, Deserialize)]
 #[model(collection_name="User")]
-struct UserModel {
+pub struct UserModel {
     pub _id: Option<ObjectId>,
     pub givenName: String,
     pub familyName: String,
     pub age: u32,
     pub gender: String,
-    #[model(index(index="desc", unique="true"))]
+    #[model(index(index="asc", unique="true"))]
     /// The nickname of the users can also be
     /// used to sign in and should be unique
     pub nickname: String,
-    #[model(index(index="desc", unique="true"))]
+    #[model(index(index="asc", unique="true"))]
     pub email: String,
     /// Only the hash of the password is saved
     /// and is saved in a string. We are using
