@@ -6,7 +6,7 @@ extern crate mongodb;
 use mongodb::{ObjectId};
 use UserModel;
 
-/// This is the account model. Ths mo
+/// This is the account model.
 #[derive(Model, Serialize, Deserialize)]
 #[model(collection_name="Account")]
 pub struct AccountModel {
