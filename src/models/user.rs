@@ -1,12 +1,11 @@
-extern crate chrono;
-use chrono::{DateTime, Utc};
-extern crate url;
-use url::{Url, ParseError};
-extern crate mongodb;
-use mongodb::{ObjectId};
-extern crate bcrypt;
+use wither::Model;
+use mongodb::bson::oid::ObjectId;
+use serde::{Serialize, Deserialize};
+use chrono::prelude::{DateTime, Utc};
+use url_serde::SerdeUrl;
 use bcrypt::{DEFAULT_COST, hash, verify};
-use theinfinitytimes_lib::*;
+use crate::theinfinitytimes_lib::{PreSaveMut};
+use std::ops::Deref;
 
 /// This is the user model, which is the base object
 /// used to store user data and is used to authenticate
@@ -15,7 +14,8 @@ use theinfinitytimes_lib::*;
 #[derive(Model, Serialize, Deserialize)]
 #[model(collection_name="User")]
 pub struct UserModel {
-    pub _id: Option<ObjectId>,
+    #[serde(rename="_id", skip_serializing_if="Option::is_none")]
+    pub id: Option<ObjectId>,
     pub givenName: String,
     pub familyName: String,
     pub age: u32,
@@ -33,19 +33,22 @@ pub struct UserModel {
     /// with the saved password
     pub userPassword: String,
     pub verifiedEmail: bool,
-    pub memberSince: DateTime,
+    pub memberSince: DateTime<Utc>,
     /// We are storing the profile pictures in a
     /// different server so this is the url pointing
     /// to that location
-    pub profilePicture: Url
+    pub profilePicture: SerdeUrl
 }
 
-impl PreSave for UserModel{
-    fn pre_save(&self){
+impl PreSaveMut for UserModel{
+    fn pre_save(&mut self){
         let user = self;
-        if user && user.userPassword && user.userPassword != null {
-            return
+        // As in the trait, I am passing a mutable reference of the object
+        // there is not need to check if `user` exists and isn't null
+        // or if it is a null pointer. This would raise an error in Rust
+        match hash(&user.userPassword, DEFAULT_COST){
+            Ok(v) => user.userPassword = v,
+            Err(e) => panic!(e)
         }
-        user.userPassword = bcrypt.hash(user.userPassword, DEFAULT_COST)?;
     }
 }
