@@ -1,0 +1,9 @@
+/.idea/
+/target/
+/.vscode/
+/docker/
+Dockerfile
+Dockerfile.devel
+.dockerignore
+README.md
+CONTRIBUTING.md
